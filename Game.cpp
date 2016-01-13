@@ -19,7 +19,7 @@
  * Post-Conditions: None
  ********************************************************************/
 Game::Game() {
-    this->state = PLAYING;
+    init();
 }
 
 /*********************************************************************
@@ -31,9 +31,10 @@ Game::Game() {
  *                  a '*' character in it.
  ********************************************************************/
 void Game::init() {
+    state = game_state_t::PLAYING;
     for(int row = 0; row < TABLE_SIZE; row++) {
         for(int col = 0; col < TABLE_SIZE; col++) {
-            this->board[row][col] = BLANK_SYMBOL;
+            board[row][col] = BLANK_SYMBOL;
         }
     }
 }
@@ -49,7 +50,7 @@ void Game::print_game() {
     using namespace std;
     for(int row = 0; row < TABLE_SIZE; row++) {
         for(int col = 0; col < TABLE_SIZE; col++) {
-            cout << this->board[row][col];
+            cout << board[row][col];
             if(col != TABLE_SIZE-1) {
                 cout << "|"; // divide tic tac toe boxes
             } else if(row != TABLE_SIZE-1) {
@@ -64,22 +65,27 @@ void Game::print_game() {
 
 
 bool Game::has_player_won(Player p, int row, int col) {
-    // Rows
-    bool current_row = (this->board[row-1][0] == 
-                        this->board[row-1][1] == 
-                        this->board[row-1][2]);
-    bool current_col = (this->board[0][col-1] ==
-                        this->board[1][col-1] ==
-                        this->board[2][col-1]);
-    bool diagonal_1 =  (this->board[0][0] ==
-                        this->board[1][1] ==
-                        this->board[2][2]);
-    bool diagonal_2 =  (this->board[0][2] ==
-                        this->board[1][1] ==
-                        this->board[2][0]);
-   if(current_row || current_col || diagonal_1 || diagonal_2) {
+    char player_symbol = p.get_symbol();
+    bool current_row = all_equal(player_symbol,
+                                 board[row-1][0], 
+                                 board[row-1][1], 
+                                 board[row-1][2]);
+    bool current_col = all_equal(player_symbol,
+                                 board[0][col-1],
+                                 board[1][col-1],
+                                 board[2][col-1]);
+    bool diagonal_1 =  all_equal(player_symbol,
+                                 board[0][0],
+                                 board[1][1],
+                                 board[2][2]);
+    bool diagonal_2 =  all_equal(player_symbol,
+                                 board[0][2],
+                                 board[1][1],
+                                 board[2][0]);
+    if(current_row || current_col || diagonal_1 || diagonal_2) {
         std::cout << "Player \'" << p.get_symbol() << "\' has won!";
-        this->state = WIN;
+        std::cout << std::endl;
+        state = game_state_t::WIN;
         return true;
     }
     return false; 
@@ -94,17 +100,18 @@ bool Game::is_draw() {
      */
     for(int row = 0; row < TABLE_SIZE; row++) {
         for(int col = 0; col < TABLE_SIZE; col++) {
-            if(this->board[row][col] == BLANK_SYMBOL) {
+            if(board[row][col] == BLANK_SYMBOL) {
                 return false;
             }
         }
     }
-    this->state = DRAW;
+    std::cout << "The game is a draw!" << std::endl;
+    state = game_state_t::DRAW;
     return true;
 }
 
-game_state_t Game::get_state() {
-    return this->state;
+game_state_t::game_state_t Game::get_state() {
+    return state;
 }
 
 bool Game::is_legal_move(int row, int col) {
@@ -114,7 +121,7 @@ bool Game::is_legal_move(int row, int col) {
                 "between 1 and " << TABLE_SIZE << "." << endl;
         return false;
     }
-    else if(this->board[row-1][col-1] != '*') {
+    else if(board[row-1][col-1] != BLANK_SYMBOL) {
         cout << "ERROR: This space is already occupied. Please provide "
                 "another space to play." << endl;
         return false;
@@ -125,10 +132,15 @@ bool Game::is_legal_move(int row, int col) {
 }
 
 bool Game::make_move(Player p, int row, int col) {
-    if(this->is_legal_move(row,col)) {
+    if(is_legal_move(row,col)) {
         std::cout << "(" << row << "," << col << ")" << std::endl;
-        this->board[row-1][col-1] = p.get_symbol();
+        board[row-1][col-1] = p.get_symbol();
+        print_game();
         return true;
     }
     return false;
+}
+
+bool Game::all_equal(char p, char a, char b, char c) {
+    return (p == a && a == b && b == c);
 }

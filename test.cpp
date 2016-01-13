@@ -50,21 +50,82 @@ int main() {
     test_game.print_game();
 
     cout << "Has the game ended? Expected: False." << endl;
-    cout << (test_game.has_player_won(test_player_1,1,2) || test_game.is_draw());
-    cout << endl;
+    cout << (test_game.has_player_won(test_player_1,1,2) || test_game.is_draw()) << endl;
     
     cout << "Completing game using test_player_1" << endl;
     test_game.make_move(test_player_1,1,3);
     test_game.print_game();
     
     cout << "Has test_player_1 won yet? Expected: False." << endl;
-    cout << (test_game.has_player_won(test_player_1,1,3)) << endl;
+    cout << (test_game.has_player_won(test_player_1,1,3) || test_game.is_draw()) << endl;
 
     test_game.make_move(test_player_1,3,3);
     test_game.print_game();
     
     cout << "Has test_player_1 won yet? Expected: True." << endl;
     cout << (test_game.has_player_won(test_player_1,3,3)) << endl;
+
+    cout << "Resetting the game." << endl;
+    test_game.init();
+    test_game.print_game();
+    
+    cout << "Testing win with a Row of &'s." << endl;
+    test_game.make_move(test_player_2,1,1);
+    test_game.make_move(test_player_2,1,2);
+    test_game.make_move(test_player_2,1,3);
+    test_game.print_game();
+    test_game.has_player_won(test_player_2,1,3);   
+
+    cout << "Resetting the game." << endl;
+    test_game.init();
+    test_game.print_game();
+
+    cout << "Testing win with a Col of &'s." << endl;
+    test_game.make_move(test_player_2,1,1);
+    test_game.make_move(test_player_2,2,1);
+    test_game.make_move(test_player_2,3,1);
+    test_game.print_game();
+    test_game.has_player_won(test_player_2,3,1);   
+
+    cout << "Resetting the game." << endl;
+    test_game.init();
+    test_game.print_game();
+
+    cout << "Testing win with a diagonal of &'s." << endl;
+    test_game.make_move(test_player_2,1,1);
+    test_game.make_move(test_player_2,2,2);
+    test_game.make_move(test_player_2,3,3);
+    test_game.print_game();
+    test_game.has_player_won(test_player_2,3,3);   
+
+    cout << "Resetting the game." << endl;
+    test_game.init();
+    test_game.print_game();
+
+    cout << "Testing win with a different diagonal of &'s." << endl;
+    test_game.make_move(test_player_2,3,1);
+    test_game.make_move(test_player_2,2,2);
+    test_game.make_move(test_player_2,1,3);
+    test_game.print_game();
+    test_game.has_player_won(test_player_2,1,3);   
+ 
+    cout << "Resetting the game." << endl;
+    test_game.init();
+    test_game.print_game();
+   
+    cout << "Testing a draw." << endl;
+    test_game.make_move(test_player_1,1,1);
+    test_game.make_move(test_player_1,1,2);
+    test_game.make_move(test_player_2,1,3);
+    test_game.make_move(test_player_2,2,1);
+    test_game.make_move(test_player_2,2,2);
+    test_game.make_move(test_player_1,2,3);
+    test_game.make_move(test_player_1,3,1);
+    test_game.make_move(test_player_1,3,2);
+    test_game.make_move(test_player_2,3,3);
+    test_game.print_game();
+    test_game.has_player_won(test_player_2,1,3);
+    test_game.is_draw();
 
     return 0;
 }

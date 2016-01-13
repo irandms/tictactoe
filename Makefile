@@ -9,8 +9,16 @@ Player: Player.cpp
 test: test.cpp
 	$(CXX) -c test.cpp -o test.o
 
+main: main.cpp
+	$(CXX) -c main.cpp -o main.o
+
 debug: Game.o Player.o test.o 
 	$(CXX) -g -lm Game.o Player.o test.o -o debug 
 
+tictactoe: Game.o Player.o main.o
+	$(CXX) -lm Game.o Player.o main.o -o tictactoe
+	
+default: tictactoe
+
 clean: 
-	rm -f *.o main debug 
+	rm -f *.o tictactoe debug 
