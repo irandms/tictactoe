@@ -5,6 +5,7 @@
 
 int main() {
     using namespace std;
+    bool move_made = false;
 
     // Testing Player class and it's methods.
     Player test_player_1('Q');
@@ -47,6 +48,23 @@ int main() {
     cout << "Testing an invalid move at 2,3; already played." << endl;
     test_game.make_move(test_player_2,2,3);
     test_game.print_game();
+
+    cout << "Has the game ended? Expected: False." << endl;
+    cout << (test_game.has_player_won(test_player_1,1,2) || test_game.is_draw());
+    cout << endl;
+    
+    cout << "Completing game using test_player_1" << endl;
+    test_game.make_move(test_player_1,1,3);
+    test_game.print_game();
+    
+    cout << "Has test_player_1 won yet? Expected: False." << endl;
+    cout << (test_game.has_player_won(test_player_1,1,3)) << endl;
+
+    test_game.make_move(test_player_1,3,3);
+    test_game.print_game();
+    
+    cout << "Has test_player_1 won yet? Expected: True." << endl;
+    cout << (test_game.has_player_won(test_player_1,3,3)) << endl;
 
     return 0;
 }

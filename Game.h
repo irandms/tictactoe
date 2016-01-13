@@ -6,16 +6,17 @@
 
 class Game {
     private:
-        char board[][4];
+        char board[][5];
         game_state_t state;
     public:
         Game();
         void init();
         void print_game();
-        void check_state();
+        bool has_player_won(Player p, int row, int col);
+        bool is_draw();
         game_state_t get_state();
-        bool can_move(int row, int col);
-        void make_move(Player p, int row, int col); 
+        bool is_legal_move(int row, int col);
+        bool make_move(Player p, int row, int col); 
 };
 
 #endif
