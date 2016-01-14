@@ -1,4 +1,5 @@
 CXX = g++
+.DEFAULT_GOAL := tictactoe
 
 Game: Game.cpp
 	$(CXX) -c Game.cpp -o Game.o
@@ -17,8 +18,6 @@ debug: Game.o Player.o test.o
 
 tictactoe: Game.o Player.o main.o
 	$(CXX) -lm Game.o Player.o main.o -o tictactoe
-	
-default: tictactoe
 
 clean: 
 	rm -f *.o tictactoe debug 

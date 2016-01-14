@@ -114,6 +114,10 @@ int Game::get_state() {
     return state;
 }
 
+char Game::get_char_at(int row, int col) {
+    return board[row-1][col-1];
+}
+
 bool Game::is_legal_move(int row, int col) {
     using namespace std;
     if((row < 1 || row > 3) || (col < 1 || col > 3)) {
