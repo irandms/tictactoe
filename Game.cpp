@@ -31,12 +31,12 @@ Game::Game() {
  *                  a '*' character in it.
  ********************************************************************/
 void Game::init() {
-    state = game_state_t::PLAYING;
     for(int row = 0; row < TABLE_SIZE; row++) {
         for(int col = 0; col < TABLE_SIZE; col++) {
             board[row][col] = BLANK_SYMBOL;
         }
     }
+    state = PLAYING;
 }
 
 /*********************************************************************
@@ -83,9 +83,9 @@ bool Game::has_player_won(Player p, int row, int col) {
                                  board[1][1],
                                  board[2][0]);
     if(current_row || current_col || diagonal_1 || diagonal_2) {
-        std::cout << "Player \'" << p.get_symbol() << "\' has won!";
+        std::cout << "Player '" << p.get_symbol() << "' has won!";
         std::cout << std::endl;
-        state = game_state_t::WIN;
+        state = GAME_OVER;
         return true;
     }
     return false; 
@@ -106,11 +106,11 @@ bool Game::is_draw() {
         }
     }
     std::cout << "The game is a draw!" << std::endl;
-    state = game_state_t::DRAW;
+    state = GAME_OVER;
     return true;
 }
 
-game_state_t::game_state_t Game::get_state() {
+int Game::get_state() {
     return state;
 }
 
@@ -135,7 +135,6 @@ bool Game::make_move(Player p, int row, int col) {
     if(is_legal_move(row,col)) {
         std::cout << "(" << row << "," << col << ")" << std::endl;
         board[row-1][col-1] = p.get_symbol();
-        print_game();
         return true;
     }
     return false;

@@ -1,5 +1,4 @@
 #include <iostream>
-#include "game_state.h"
 #include "Player.h"
 #include "Game.h"
 
@@ -18,7 +17,9 @@ int main() {
     
     // Testing Game class and it's methods.
     Game test_game;
+    cout << test_game.get_state() << endl;
     test_game.init();
+    cout << test_game.get_state() << endl;
     test_game.print_game();
 
     cout << "Testing a valid move at 2,3." << endl;
@@ -108,10 +109,14 @@ int main() {
     test_game.make_move(test_player_2,1,3);
     test_game.print_game();
     test_game.has_player_won(test_player_2,1,3);   
- 
+    cout << "State of game: " << test_game.get_state() << endl;
+    cout << "Expected GAME_OVER(1): " << Game::GAME_OVER << endl;
+
     cout << "Resetting the game." << endl;
     test_game.init();
     test_game.print_game();
+    cout << "State of game: " << test_game.get_state() << endl;
+    cout << "Expected PLAYING(0): " << Game::PLAYING << endl;
    
     cout << "Testing a draw." << endl;
     test_game.make_move(test_player_1,1,1);
@@ -119,6 +124,8 @@ int main() {
     test_game.make_move(test_player_2,1,3);
     test_game.make_move(test_player_2,2,1);
     test_game.make_move(test_player_2,2,2);
+    cout << "State of game: " << test_game.get_state() << endl;
+    cout << "Expected PLAYING(0): " << Game::PLAYING << endl;
     test_game.make_move(test_player_1,2,3);
     test_game.make_move(test_player_1,3,1);
     test_game.make_move(test_player_1,3,2);
@@ -126,6 +133,14 @@ int main() {
     test_game.print_game();
     test_game.has_player_won(test_player_2,1,3);
     test_game.is_draw();
+    cout << "State of game: " << test_game.get_state() << endl;
+    cout << "Expected GAME_OVER(1): " << Game::GAME_OVER << endl;
+  
+    cout << "Printing enum values." << endl; 
+    cout << "Playing: " << Game::PLAYING << endl;
+    cout << "Game over: " << Game::GAME_OVER << endl;   
+
+    
 
     return 0;
 }
