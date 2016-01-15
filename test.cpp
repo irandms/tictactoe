@@ -1,3 +1,10 @@
+/********************************************************************
+ * Program Filename: test.cpp
+ * Author: Spencer Moss
+ * Date: January 9th, 2015
+ * Description: Rudimentary first steps at testing & validating 
+ *              class functionality. 
+ *******************************************************************/
 #include <iostream>
 #include "Player.h"
 #include "Game.h"

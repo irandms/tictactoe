@@ -1,3 +1,10 @@
+/********************************************************************
+ * Program Filename: Game.h
+ * Author: Spencer Moss
+ * Date: January 11t, 2015
+ * Description: The Tic-Tac-Toe Class header.
+ *******************************************************************/
+
 #ifndef GAME_H
 #define GAME_H
 
@@ -6,7 +13,10 @@
 class Game {
    public:
 
-        enum game_state_t { PLAYING, GAME_OVER };
+        enum game_state_t { 
+                PLAYING, 
+                GAME_OVER 
+        };
 
         Game(int size);
         ~Game();
@@ -19,11 +29,11 @@ class Game {
         char get_char_at(int row, int col);
         bool is_legal_move(int row, int col);
         bool make_move(Player p, int row, int col); 
+
     private:
-        char** board;
+        char **board;
         int board_size;
-        game_state_t state;
- 
+        game_state_t state; 
 };
 
 #endif

@@ -1,3 +1,10 @@
+/********************************************************************
+ * Program Filename: Player.cpp
+ * Author: Spencer Moss
+ * Date: January 10th, 2015
+ * Description: The Player class that provides a player's symbol,
+ *              and a flag to set them as AI.
+ *******************************************************************/
 #include "Player.h"
 
 Player::Player(char symbol) {
