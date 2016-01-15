@@ -17,7 +17,7 @@ debug: Game.o Player.o test.o
 	$(CXX) -g -lm Game.o Player.o test.o -o debug 
 
 tictactoe: Game.o Player.o main.o
-	$(CXX) -lm Game.o Player.o main.o -o tictactoe
+	$(CXX) -g -lm Game.o Player.o main.o -o tictactoe
 
 clean: 
 	rm -f *.o tictactoe debug 

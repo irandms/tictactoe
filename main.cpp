@@ -1,12 +1,12 @@
 #include <iostream>
 #include <limits>
-#include "game_state.h"
 #include "Player.h"
 #include "Game.h"
 
 using namespace std;
 
 char get_user_input();
+Game prompt_for_board_size();
 bool prompt_yes_or_no();
 void prompt_for_ai(Player& p1, Player& p2);
 bool make_ai_move(Game& g, Player p);
@@ -15,12 +15,12 @@ bool make_player_move(Game& g, Player p);
 int main() {
     Player player_1('X');
     Player player_2('O');
-    Game tic_tac_toe;
     int turn_counter = 1;
     bool move_made = false;
     bool user_wants_to_play_again = true;
     
     cout << "Welcome to Tic-Tac-Toe!" << endl; 
+    Game tic_tac_toe = prompt_for_board_size();    
     prompt_for_ai(player_1, player_2);    
     tic_tac_toe.print_game();
 
@@ -80,6 +80,18 @@ char get_user_input() {
         cin >> user_input;
     }
     return user_input;
+}
+
+Game prompt_for_board_size() {
+    int desired_size;
+    cout << "What size board would you like? [2/3/4/5]" << endl;
+    while(!(cin >> desired_size) || desired_size < 2 || desired_size > 5) {
+        cout << "Invalid input. Please try again." << endl;
+        cin.clear();
+        cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        cin >> desired_size; 
+    }
+    return Game(desired_size);
 }
 
 bool prompt_yes_or_no() {

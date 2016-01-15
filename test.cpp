@@ -16,7 +16,7 @@ int main() {
     cout << ". Expected &." << endl;
     
     // Testing Game class and it's methods.
-    Game test_game;
+    Game test_game(3);
     cout << test_game.get_state() << endl;
     test_game.init();
     cout << test_game.get_state() << endl;

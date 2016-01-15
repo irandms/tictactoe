@@ -8,18 +8,30 @@
 
 #include <iostream>
 #include "Game.h"
-#define TABLE_SIZE 3
 #define BLANK_SYMBOL '*'
 
 /*********************************************************************
  * Function: Game()
  * Description: Constructor for the Game class.
- * Parameters: None
+ * Parameters: 
  * Pre-Conditions: None
  * Post-Conditions: None
  ********************************************************************/
-Game::Game() {
+Game::Game(int size) {
+    board = new char*[size];
+    board_size = size;
+    for(int i = 0; i < board_size; i++) {
+        char * array_row = new char[board_size];
+        board[i] = array_row;
+    }
     init();
+}
+
+Game::~Game() {
+    for(int i = 0; i < board_size; i++) {
+        char * array_row = board[i];
+        delete array_row;
+    }
 }
 
 /*********************************************************************
@@ -33,8 +45,8 @@ Game::Game() {
  *                  PLAYING.
  ********************************************************************/
 void Game::init() {
-    for(int row = 0; row < TABLE_SIZE; row++) {
-        for(int col = 0; col < TABLE_SIZE; col++) {
+    for(int row = 0; row < board_size; row++) {
+        for(int col = 0; col < board_size; col++) {
             board[row][col] = BLANK_SYMBOL;
         }
     }
@@ -50,14 +62,14 @@ void Game::init() {
  ********************************************************************/
 void Game::print_game() {
     using namespace std;
-    for(int row = 0; row < TABLE_SIZE; row++) {
-        for(int col = 0; col < TABLE_SIZE; col++) {
+    for(int row = 0; row < board_size; row++) {
+        for(int col = 0; col < board_size; col++) {
             cout << board[row][col];
-            if(col != TABLE_SIZE-1) {
+            if(col != board_size-1) {
                 cout << "|"; // divide tic tac toe boxes
-            } else if(row != TABLE_SIZE-1) {
+            } else if(row != board_size-1) {
                 cout << endl;
-                cout << std::string((TABLE_SIZE*2)-1,'-') << endl; 
+                cout << std::string((board_size*2)-1,'-') << endl; 
             } else {
                 cout << endl << endl;
             }
@@ -100,8 +112,8 @@ bool Game::is_draw() {
      * the game has been played out. A draw 
      * may only occur when the board is full.
      */
-    for(int row = 0; row < TABLE_SIZE; row++) {
-        for(int col = 0; col < TABLE_SIZE; col++) {
+    for(int row = 0; row < board_size; row++) {
+        for(int col = 0; col < board_size; col++) {
             if(board[row][col] == BLANK_SYMBOL) {
                 return false;
             }
@@ -116,15 +128,19 @@ int Game::get_state() {
     return state;
 }
 
+int Game::get_board_size() {
+    return board_size;
+}
+
 char Game::get_char_at(int row, int col) {
     return board[row-1][col-1];
 }
 
 bool Game::is_legal_move(int row, int col) {
     using namespace std;
-    if((row < 1 || row > 3) || (col < 1 || col > 3)) {
+    if((row < 1 || row > board_size) || (col < 1 || col > board_size)) {
         cout << "ERROR: Please ensure your row and col values are "
-                "between 1 and " << TABLE_SIZE << "." << endl;
+                "between 1 and " << board_size << "." << endl;
         return false;
     }
     else if(board[row-1][col-1] != BLANK_SYMBOL) {
