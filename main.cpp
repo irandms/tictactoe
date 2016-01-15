@@ -114,28 +114,34 @@ void prompt_for_ai(Player& p1, Player& p2) {
 
     cout << "Would you like to play with AI enabled? [y/n]" << endl;
     bool ai_enabled = prompt_yes_or_no();
+    bool input_is_valid = false;
     
     if(ai_enabled) {
-        cout << "Would the human like to play 1st or 2nd?" << endl; 
-        cout << "1 for first, 2 for second." << endl;
-        user_input_turn_char = get_user_input();
-        switch(user_input_turn_char) {
-            case '1':
-                p2.set_ai(true);
-                cout << "AI Enabled!" << endl;
-                break;
-            case '2':
-                p1.set_ai(true);
-                cout << "AI Enabled!" << endl;
-                break;
-            case 's':
-                p1.set_ai(true);
-                p2.set_ai(true);
-                cout << "AI vs AI enabled!" << endl;
-                break;
-            default:
-                cout << "Invalid input. Please type 1 or 2." << endl;
-                break;
+        while(!input_is_valid) {
+            cout << "Would the human like to play 1st or 2nd?" << endl; 
+            cout << "1 for first, 2 for second." << endl;
+            user_input_turn_char = get_user_input();
+            switch(user_input_turn_char) {
+                case '1':
+                    p2.set_ai(true);
+                    cout << "AI Enabled!" << endl;
+                    input_is_valid = true;
+                    break;
+                case '2':
+                    p1.set_ai(true);
+                    cout << "AI Enabled!" << endl;
+                    input_is_valid = true;
+                    break;
+                case 's':
+                    p1.set_ai(true);
+                    p2.set_ai(true);
+                    cout << "AI vs AI enabled!" << endl;
+                    input_is_valid = true;
+                    break;
+                default:
+                    cout << "Invalid input. Please type 1 or 2." << endl;
+                    break;
+            }
         }
     }
 }
@@ -144,8 +150,8 @@ bool make_ai_move(Game& g, Player p) {
     int cur_row;
     int cur_col;
     bool move_made = false;
-    for(cur_row = 1; cur_row < 4; cur_row++) {
-        for(cur_col = 1; cur_col < 4; cur_col++) {
+    for(cur_row = 1; cur_row <= g.get_board_size(); cur_row++) {
+        for(cur_col = 1; cur_col <= g.get_board_size(); cur_col++) {
             if(g.get_char_at(cur_row, cur_col) == '*') {
                 move_made = g.make_move(p, cur_row, cur_col);
                 break;
@@ -187,8 +193,16 @@ bool make_player_move(Game& g, Player p) {
         cin >> cur_col;
     }
     move_made = g.make_move(p,cur_row, cur_col);   
-    if(!g.has_player_won(p, cur_row, cur_col)) {
-         g.is_draw();
+    /* 
+     * Check for victory only if move was made.
+     * Reduces unnecessary computation & prevents segfaults.
+     * move_made will only be True if cur_col and cur_col are
+     * safe and within board array bounds!
+     */
+    if(move_made) {
+        if(!g.has_player_won(p, cur_row, cur_col)) {
+            g.is_draw();
+        }
     }
     return move_made;
 }

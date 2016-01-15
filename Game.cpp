@@ -79,26 +79,28 @@ void Game::print_game() {
 
 
 bool Game::has_player_won(Player p, int row, int col) {
+    using namespace std;
     char player_symbol = p.get_symbol();
-    bool current_row = all_equal(player_symbol,
-                                 board[row-1][0], 
-                                 board[row-1][1], 
-                                 board[row-1][2]);
-    bool current_col = all_equal(player_symbol,
-                                 board[0][col-1],
-                                 board[1][col-1],
-                                 board[2][col-1]);
-    bool diagonal_1 =  all_equal(player_symbol,
-                                 board[0][0],
-                                 board[1][1],
-                                 board[2][2]);
-    bool diagonal_2 =  all_equal(player_symbol,
-                                 board[0][2],
-                                 board[1][1],
-                                 board[2][0]);
-    if(current_row || current_col || diagonal_1 || diagonal_2) {
-        std::cout << "Player '" << p.get_symbol() << "' has won!";
-        std::cout << std::endl;
+    bool row_victory = true;
+    bool col_victory = true; 
+    bool diag_victory = true;
+    bool other_diag_victory = true;
+    for(int i = 0; i < board_size; i++) {
+        if(board[row-1][i] != player_symbol) {
+            row_victory = false;
+        }
+        if(board[i][col-1] != player_symbol) {
+            col_victory = false;
+        }
+        if(board[i][i] != player_symbol) {
+            diag_victory = false;
+        }
+        if(board[i][board_size-1-i] != player_symbol) {
+            other_diag_victory = false;
+        }  
+    }
+    if(row_victory || col_victory || diag_victory || other_diag_victory) {
+        cout << "Player '" << p.get_symbol() << "' has won!" << endl;
         state = GAME_OVER;
         return true;
     }
@@ -160,8 +162,4 @@ bool Game::make_move(Player p, int row, int col) {
         return true;
     }
     return false;
-}
-
-bool Game::all_equal(char p, char a, char b, char c) {
-    return (p == a && a == b && b == c);
 }
