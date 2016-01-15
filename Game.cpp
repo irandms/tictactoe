@@ -29,6 +29,8 @@ Game::Game() {
  * Pre-Conditions: An instance of the Game class.
  * Post-Conditions: Each index of the board[][] 2D array must have
  *                  a '*' character in it.
+ *                  Additionally, the state enum will be set to 
+ *                  PLAYING.
  ********************************************************************/
 void Game::init() {
     for(int row = 0; row < TABLE_SIZE; row++) {

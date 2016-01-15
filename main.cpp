@@ -4,67 +4,28 @@
 #include "Player.h"
 #include "Game.h"
 
+using namespace std;
+
+char get_user_input();
+bool prompt_yes_or_no();
+void prompt_for_ai(Player& p1, Player& p2);
 bool make_ai_move(Game& g, Player p);
 bool make_player_move(Game& g, Player p);
 
 int main() {
-    using namespace std;
     Player player_1('X');
     Player player_2('O');
     Game tic_tac_toe;
     int turn_counter = 1;
-    int cur_row = -1;
-    int cur_col = -1;
     bool move_made = false;
-    char user_prompt_for_quit = 'a';
-    char user_prompt_for_ai = 'a';
-    char user_prompt_for_turn_order = 'a';
+    bool user_wants_to_play_again = true;
     
     cout << "Welcome to Tic-Tac-Toe!" << endl; 
+    prompt_for_ai(player_1, player_2);    
     tic_tac_toe.print_game();
-    while(user_prompt_for_ai != 'n' && user_prompt_for_ai != 'y') {
-        cout << "Would you like to play with AI enabled?" << endl;
-        cout << "[y/n]" << endl;
-        while(!(cin >> user_prompt_for_ai)) {
-            cout << "Invalid input. Please try again." << endl;
-            cin.clear();
-            cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-            cin >> user_prompt_for_ai;
-        }    
-        switch(user_prompt_for_ai) {
-            case 'y':
-                cout << "Would the human like to play 1st or 2nd?" << endl; 
-                cout << "1 for first, 2 for second." << endl;
-                while(!(cin >> user_prompt_for_turn_order)) {
-                    cout << "Invalid input. Please try again." << endl;
-                    cin.clear();
-                    cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-                    cin >> user_prompt_for_turn_order;
-                }
-                switch(user_prompt_for_turn_order) {
-                    case '1':
-                        player_2.set_ai(true);
-                        cout << "AI Enabled!" << endl;
-                        break;
-                    case '2':
-                        player_1.set_ai(true);
-                        cout << "AI Enabled!" << endl;
-                        break;
-                    default:
-                        cout << "Didn't understand that, try again." << endl;
-                        break;
-                }            
-                break;
-            case 'n':
-                break;
-            default:
-                cout << "Didn't understand that, try again." << endl;
-                break;
-        }
-    }
 
     while(tic_tac_toe.get_state() == Game::PLAYING) {
-        if(turn_counter & 1) {
+        if(turn_counter % 2) {
             cout << "Player 1 (" << player_1.get_symbol() << "), select a "
             "space to play in the form x y" << endl;
             if(player_1.get_ai()) {
@@ -75,7 +36,7 @@ int main() {
             tic_tac_toe.print_game();
         } else {
             cout << "Player 2 (" << player_2.get_symbol() << "), select a "
-            "space to play in the form x,y." << endl;
+            "space to play in the form x y." << endl;
             if(player_2.get_ai()) {
                 move_made = make_ai_move(tic_tac_toe, player_2);   
             } else {
@@ -88,39 +49,86 @@ int main() {
             move_made = false;
             turn_counter++;
         }
-
-        while(tic_tac_toe.get_state() != Game::PLAYING) {
+ 
+        if(tic_tac_toe.get_state() != Game::PLAYING) {
             cout << "Game over! Play again? [y/n]" << endl;
-            while(!(cin >> user_prompt_for_quit)) {
-                cout << "Invalid input. Please try again." << endl;
-                cin.clear();
-                cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-                cin >> user_prompt_for_quit;
-            }    
-            switch(user_prompt_for_quit) {
-                case 'y':
-                    cout << "Restarting game!" << endl;
-                    tic_tac_toe.init();
-                    tic_tac_toe.print_game();
-                    turn_counter = 1;
-                    cur_row = -1;
-                    cur_col = -1;
-                    move_made = false;
-                    break;
-                case 'n':
-                    cout << "Goodbye, thanks for playing!" << endl;
-                    return 0;
-                default:
-                    cout << "Didn't understand that, try again." << endl;
-                    break;
+            user_wants_to_play_again = prompt_yes_or_no();
+            if(user_wants_to_play_again) {
+                cout << "Restarting game!" << endl;
+                tic_tac_toe.init();
+                turn_counter = 1;
+                move_made = false;
+                player_1.set_ai(false);
+                player_2.set_ai(false);
+                prompt_for_ai(player_1, player_2);
+                tic_tac_toe.print_game();
+            } else {
+                cout << "Goodbye, thanks for playing!" << endl;
+                return 0;
             }
         }
     }
     return 0;
 }
 
+char get_user_input() {
+    char user_input;
+    while(!(cin >> user_input)) {
+        cout << "Invalid input. Please try again." << endl;
+        cin.clear();
+        cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        cin >> user_input;
+    }
+    return user_input;
+}
+
+bool prompt_yes_or_no() {
+    while(true) {
+        char user_input = get_user_input();
+        switch(user_input) {
+            case 'y':
+                return true;
+            case 'n':
+                return false;
+            default:
+                cout << "Invalid input. Please type y or n." << endl;
+        }
+    }
+}
+                
+
+void prompt_for_ai(Player& p1, Player& p2) {
+    char user_input_turn_char;
+
+    cout << "Would you like to play with AI enabled? [y/n]" << endl;
+    bool ai_enabled = prompt_yes_or_no();
+    
+    if(ai_enabled) {
+        cout << "Would the human like to play 1st or 2nd?" << endl; 
+        cout << "1 for first, 2 for second." << endl;
+        user_input_turn_char = get_user_input();
+        switch(user_input_turn_char) {
+            case '1':
+                p2.set_ai(true);
+                cout << "AI Enabled!" << endl;
+                break;
+            case '2':
+                p1.set_ai(true);
+                cout << "AI Enabled!" << endl;
+                break;
+            case 's':
+                p1.set_ai(true);
+                p2.set_ai(true);
+                cout << "AI vs AI enabled!" << endl;
+                break;
+            default:
+                cout << "Invalid input. Please type 1 or 2." << endl;
+                break;
+        }
+    }
+}
+
 bool make_ai_move(Game& g, Player p) {
-    using namespace std;
     int cur_row;
     int cur_col;
     bool move_made = false;
@@ -142,7 +150,6 @@ bool make_ai_move(Game& g, Player p) {
 }
 
 bool make_player_move(Game& g, Player p) {
-    using namespace std;
     int cur_row;
     int cur_col;
     bool move_made = false;
