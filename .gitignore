@@ -1,2 +1,5 @@
 reflections_req/
 *.swp
+*.o
+tictactoe
+debug
