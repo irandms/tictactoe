@@ -19,8 +19,8 @@ debug: Game.o Player.o test.o
 tictactoe: Game.o Player.o main.o
 	$(CXX) -lm Game.o Player.o main.o -o tictactoe
 
-pdf: Reflections.tex
-	pdflatex Reflections.tex
+pdf: reflections_req/Reflections.tex
+	pdflatex reflections_req/Reflections.tex && mv reflections_req/Reflections.pdf .
 
 clean: 
 	rm -f *.o Reflections.aux Reflections.log Reflections.out tictactoe debug 
